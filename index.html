@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JQuery Calculator</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="calculator-box">
+        <p id="display"></p>
+        
+    <button id="one">1</button>
+    <button id="two">2</button>
+    <button id="three">3</button>
+    <button id="four">4</button>
+    
+    <button id="five">5</button>
+    <button id="six">6</button>
+    <button id="seven">7</button>
+    <button id="eight">8</button>
+    
+    <button id="nine">9</button>
+    <button id="zero">0</button>
+    <button id="point">.</button>
+    <button id="pi">π</button>
+    
+    <button id="add">+</button>
+    <button id="subtract">-</button>
+    <button id="multiply">*</button>
+    <button id="divide">/</button>
+    
+    <button id="perc">%</button>
+    <button id="modulo">mod</button>
+    <button id="exponent">xʸ</button>
+    <button id="squareroot">√</button>
+
+    <button id="sin">sin</button>
+    <button id="cos">cos</button>
+    <button id="tan">tan</button>
+    <button id="log">ln</button>
+
+    <button id="cosec">csc</button>
+    <button id="sec">sec</button>
+    <button id="cot">cot</button>
+    <button id="clear">C</button>
+
+    <button id="equals">=</button>
+    </div>
+
+    
+
+    <script>
+        let firstNumber = "";
+        let operator = "";
+
+        $(document).ready(function() {
+            $("body").css({
+        "display": "flex",
+        "flex-direction": "column", 
+        "align-items": "center",
+        "min-height": "100vh",     
+        "margin": "0",
+        "background-color": "#f0f2f5"
+            });
+
+            $("#calculator-box").css({
+        "width": "360px",
+        "padding": "20px",
+        "margin-top": "auto",      
+        "background-color": "#ffffff",
+        "border-radius": "15px",
+        "box-shadow": "0px 10px 40px rgba(0, 0, 0, 0.25)",
+        "text-align": "center"
+            });
+
+            $("#display").css({
+                "width": "100%",
+                "height": "60px",
+                "margin-bottom": "20px",
+                "background-color": "#222",
+                "color": "#0f0",
+                "font-family": "monospace",
+                "font-size": "24px",
+                "text-align": "right",
+                "padding": "10px",
+                "border-radius": "5px",
+                "border": "none"
+            });
+
+            $("button").css({
+                "width": "70px",
+                "height": "50px",
+                "margin": "5px",
+                "border-radius": "8px",
+                "border": "1px solid #ddd",
+                "font-weight": "bold",
+                "cursor": "pointer",
+                "transition": "0.2s"
+            });
+
+            $("#one, #two, #three, #four, #five, #six, #seven, #eight, #nine, #zero, #point, #pi").css({
+                "background-color": "#f8f9fa",
+                "color": "#212529"
+            });
+
+            $("#sin, #cos, #tan, #cosec, #sec, #cot, #log, #squareroot, #exponent, #modulo, #perc").css({
+                "background-color": "#6c757d",
+                "color": "white"
+            });
+
+            $("#add, #subtract, #multiply, #divide").css({
+                "background-color": "#ffc107",
+                "color": "black"
+            });
+
+            $("#clear").css({ "background-color": "#dc3545", "color": "white" });
+            $("#equals").css({ "background-color": "#198754", "color": "white" });
+
+            $("#app-footer").css({
+            "text-align": "center",
+            "padding": "20px",
+            "width": "100%",
+            "color": "#555",
+            "font-size": "14px",
+            "background-color": "#ffffff",
+            "border-top": "1px solid #ddd",
+            "margin-top": "auto"        
+            });
+
+            $("#app-footer strong").css("color", "#333");
+
+            $("#calc-icon").css({
+            "width": "40px",
+            "height": "40px",
+            "margin-bottom": "10px",
+            "opacity": "0.8",
+            "transition": "all 0.3s ease"
+            });
+
+            $("#one").click(function() { $("#display").append("1"); });
+            $("#two").click(function() { $("#display").append("2"); });
+            $("#three").click(function() { $("#display").append("3"); });
+            $("#four").click(function() { $("#display").append("4"); });
+            $("#five").click(function() { $("#display").append("5"); });
+            $("#six").click(function() { $("#display").append("6"); });
+            $("#seven").click(function() { $("#display").append("7"); });
+            $("#eight").click(function() { $("#display").append("8"); });
+            $("#nine").click(function() { $("#display").append("9"); });
+            $("#zero").click(function() { $("#display").append("0"); });
+            $("#point").click(function() { $("#display").append("."); });
+
+            $("#add").click(function() { operator = "add"; $("#display").append("+"); });
+            $("#subtract").click(function() { operator = "subtract"; $("#display").append("-"); });
+            $("#multiply").click(function() { operator = "multiply"; $("#display").append("*"); });
+            $("#divide").click(function() { operator = "divide"; $("#display").append("/"); });
+            $("#perc").click(function() { operator = "perc"; $("#display").append("% of "); });
+            $("#modulo").click(function() { operator = "modulo"; $("#display").append("mod"); });
+            $("#squareroot").click(function() { operator = "squareroot"; $("#display").append("√"); });
+            $("#log").click(function() { operator = "log"; $("#display").append("ln"); });
+            $("#pi").click(function() { $("#display").append("3.14159"); });
+            
+            $("#sin").click(function() { operator = "sin"; $("#display").append("sin"); });
+            $("#cos").click(function() { operator = "cos"; $("#display").append("cos"); });
+            $("#tan").click(function() { operator = "tan"; $("#display").append("tan"); });
+            $("#cosec").click(function() { operator = "cosec"; $("#display").append("cosec"); });
+            $("#sec").click(function() { operator = "sec"; $("#display").append("sec"); });
+            $("#cot").click(function() { operator = "cot"; $("#display").append("cot"); });
+            $("#exponent").click(function() { firstNumber = $("#display").text(); operator = "pow"; $("#display").append("^"); });
+
+            $("#clear").click(function() { $("#display").text(""); firstNumber = ""; operator = ""; });
+
+    $(document).keydown(function(e) {
+       switch (e.key) {
+        case "0": $("#zero").click(); break;
+        case "1": $("#one").click(); break;
+        case "2": $("#two").click(); break;
+        case "3": $("#three").click(); break;
+        case "4": $("#four").click(); break;
+        case "5": $("#five").click(); break;
+        case "6": $("#six").click(); break;
+        case "7": $("#seven").click(); break;
+        case "8": $("#eight").click(); break;
+        case "9": $("#nine").click(); break;
+        case ".": $("#point").click(); break;
+        case "+": $("#add").click(); break;
+        case "-": $("#subtract").click(); break;
+        case "*": $("#multiply").click(); break;
+        case "/": 
+            e.preventDefault();
+            $("#divide").click(); 
+            break;
+        case "Enter": 
+        case "=": 
+            $("#equals").click(); 
+            break;
+        case "Backspace":            
+            $("#clear").click(); 
+            break;
+        case "Escape": 
+            $("#clear").click(); 
+            break;
+        case "%": $("#perc").click(); break;
+    }
+});
+
+            $("#equals").click(function() {
+                let currentDisplay = $("#display").text();
+                let result;
+                let parts;
+                
+                switch (operator) {
+                    case "pow":
+                        parts = currentDisplay.split("^");
+                        result = Math.pow(parseFloat(parts[0]), parseFloat(parts[1]));
+                        break;
+                    case "add":
+                        parts = currentDisplay.split("+");
+                        result = parseFloat(parts[0]) + parseFloat(parts[1]);
+                        break;
+                    case "subtract":
+                        parts = currentDisplay.split("-");
+                        result = parseFloat(parts[0]) - parseFloat(parts[1]);
+                        break;
+                    case "multiply":
+                        parts = currentDisplay.split("*");
+                        result = parseFloat(parts[0]) * parseFloat(parts[1]);
+                        break;
+                    case "divide":
+                        parts = currentDisplay.split("/");
+                        result = parseFloat(parts[0]) / parseFloat(parts[1]);
+                        break;
+                    case "modulo":
+                        parts = currentDisplay.split("mod");
+                        result = parseFloat(parts[0]) % parseFloat(parts[1]);
+                        break;
+                    case "sin":
+                        result = Math.sin(parseFloat(currentDisplay.replace("sin", "")) * (Math.PI / 180));
+                        break;
+                    case "cos":
+                        result = Math.cos(parseFloat(currentDisplay.replace("cos", "")) * (Math.PI / 180));
+                        break;
+                    case "tan":
+                        result = Math.tan(parseFloat(currentDisplay.replace("tan", "")) * (Math.PI / 180));
+                        break;
+                    case "cot":
+                        result = 1 / Math.tan(parseFloat(currentDisplay.replace("cot", "")) * (Math.PI / 180));
+                        break;
+                    case "cosec":
+                        result = 1 / Math.sin(parseFloat(currentDisplay.replace("cosec", "")) * (Math.PI / 180));
+                        break;
+                    case "sec":
+                        result = 1 / Math.cos(parseFloat(currentDisplay.replace("sec", "")) * (Math.PI / 180));
+                        break;
+                    case "squareroot":
+                        result = Math.sqrt(parseFloat(currentDisplay.replace("√", "")));
+                        break;
+                    case "log":
+                        result = Math.log(parseFloat(currentDisplay.replace("ln", "")));
+                        break;
+                    case "perc":
+                        parts = currentDisplay.split("% of ");
+                        result = (parseFloat(parts[0]) / 100) * parseFloat(parts[1]);
+                        break;
+                    default:
+                        result = currentDisplay;
+                }
+                $("#display").text(result);
+                operator = "";
+            });
+        });
+
+        
+    </script>
+
+    <footer id="app-footer">
+    <p><b>&copy Syed Danish Anwar</b></p>
+    <p><b>Developed using JavaScript with the jQuery Library</b></p>
+</footer>
+</body>
+</html>
