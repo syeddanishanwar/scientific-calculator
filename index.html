@@ -153,7 +153,19 @@
             $("#point").click(function() { $("#display").append("."); });
 
             $("#add").click(function() { operator = "add"; $("#display").append("+"); });
-            $("#subtract").click(function() { operator = "subtract"; $("#display").append("-"); });
+            $("#subtract").click(function() { 
+                // Check if the last character is a trigonometric function
+                let currentText = $("#display").text();
+                if (currentText.endsWith("sin") || currentText.endsWith("cos") || 
+                    currentText.endsWith("tan") || currentText.endsWith("cot") || 
+                    currentText.endsWith("csc") || currentText.endsWith("sec") || 
+                    currentText.endsWith("ln")) {
+                    $("#display").append("-"); // Append negative sign without setting operator
+                } else {
+                    operator = "subtract"; 
+                    $("#display").append("-");
+                }
+            });
             $("#multiply").click(function() { operator = "multiply"; $("#display").append("*"); });
             $("#divide").click(function() { operator = "divide"; $("#display").append("/"); });
             $("#perc").click(function() { operator = "perc"; $("#display").append("% of "); });
@@ -165,7 +177,7 @@
             $("#sin").click(function() { operator = "sin"; $("#display").append("sin"); });
             $("#cos").click(function() { operator = "cos"; $("#display").append("cos"); });
             $("#tan").click(function() { operator = "tan"; $("#display").append("tan"); });
-            $("#cosec").click(function() { operator = "cosec"; $("#display").append("cosec"); });
+            $("#cosec").click(function() { operator = "cosec"; $("#display").append("csc"); });
             $("#sec").click(function() { operator = "sec"; $("#display").append("sec"); });
             $("#cot").click(function() { operator = "cot"; $("#display").append("cot"); });
             $("#exponent").click(function() { firstNumber = $("#display").text(); operator = "pow"; $("#display").append("^"); });
@@ -221,8 +233,22 @@
                         result = parseFloat(parts[0]) + parseFloat(parts[1]);
                         break;
                     case "subtract":
+                        // Handle negative numbers in trigonometric functions
+                        if (currentDisplay.includes("sin-") || currentDisplay.includes("cos-") || 
+                            currentDisplay.includes("tan-") || currentDisplay.includes("cot-") || 
+                            currentDisplay.includes("csc-") || currentDisplay.includes("sec-") || 
+                            currentDisplay.includes("ln-")) {
+                            // This will be handled by the trig cases
+                            break;
+                        }
                         parts = currentDisplay.split("-");
-                        result = parseFloat(parts[0]) - parseFloat(parts[1]);
+                        // Check if this is a simple subtraction (not a negative sign in trig function)
+                        if (parts.length === 2 && !currentDisplay.includes("sin") && 
+                            !currentDisplay.includes("cos") && !currentDisplay.includes("tan") && 
+                            !currentDisplay.includes("cot") && !currentDisplay.includes("csc") && 
+                            !currentDisplay.includes("sec") && !currentDisplay.includes("ln")) {
+                            result = parseFloat(parts[0]) - parseFloat(parts[1]);
+                        }
                         break;
                     case "multiply":
                         parts = currentDisplay.split("*");
@@ -236,29 +262,75 @@
                         parts = currentDisplay.split("mod");
                         result = parseFloat(parts[0]) % parseFloat(parts[1]);
                         break;
-                    case "sin":
-                        result = Math.sin(parseFloat(currentDisplay.replace("sin", "")) * (Math.PI / 180));
-                        break;
-                    case "cos":
-                        result = Math.cos(parseFloat(currentDisplay.replace("cos", "")) * (Math.PI / 180));
-                        break;
-                    case "tan":
-                        result = Math.tan(parseFloat(currentDisplay.replace("tan", "")) * (Math.PI / 180));
-                        break;
+					case "sin":
+						let numericPartSin = currentDisplay.replace("sin", "");
+						if (numericPartSin !== "" && !isNaN(parseFloat(numericPartSin))) {
+						let angle = parseFloat(numericPartSin);
+						result = Math.sin(angle * (Math.PI / 180)); 
+						} else {
+						result = "Error";
+						}
+						break;
+					case "cos":
+						let numericPartCos = currentDisplay.replace("cos", "");
+						if (numericPartCos !== "" && !isNaN(parseFloat(numericPartCos))) {
+						let angle = parseFloat(numericPartCos);
+						result = Math.cos(angle * (Math.PI / 180)); 
+						} else {
+						result = "Error";
+						}
+						break;
+					case "tan":
+						let numericPartTan = currentDisplay.replace("tan", "");
+						if (numericPartTan !== "" && !isNaN(parseFloat(numericPartTan))) {
+						let angle = parseFloat(numericPartTan);
+						result = Math.tan(angle * (Math.PI / 180)); 
+						} else {
+						result = "Error";
+						}
+						break;
                     case "cot":
-                        result = 1 / Math.tan(parseFloat(currentDisplay.replace("cot", "")) * (Math.PI / 180));
-                        break;
+						let numericPartCot = currentDisplay.replace("cot", "");
+						if (numericPartCot !== "" && !isNaN(parseFloat(numericPartCot))) {
+						let angle = parseFloat(numericPartCot);
+						result = Math.tan(angle * (Math.PI / 180)); 
+						} else {
+						result = "Error";
+						}
+						break;
                     case "cosec":
-                        result = 1 / Math.sin(parseFloat(currentDisplay.replace("cosec", "")) * (Math.PI / 180));
-                        break;
+						let numericPartCosec = currentDisplay.replace("cosec", "");
+						if (numericPartCosec !== "" && !isNaN(parseFloat(numericPartCosec))) {
+						let angle = parseFloat(numericPartCosec);
+						result = Math.tan(angle * (Math.PI / 180)); 
+						} else {
+						result = "Error";
+						}
+						break;
                     case "sec":
-                        result = 1 / Math.cos(parseFloat(currentDisplay.replace("sec", "")) * (Math.PI / 180));
-                        break;
+						let numericPartSec = currentDisplay.replace("sec", "");
+						if (numericPartSec !== "" && !isNaN(parseFloat(numericPartSec))) {
+						let angle = parseFloat(numericPartSec);
+						result = Math.tan(angle * (Math.PI / 180)); 
+						} else {
+						result = "Error";
+						}
+						break;
                     case "squareroot":
                         result = Math.sqrt(parseFloat(currentDisplay.replace("√", "")));
                         break;
                     case "log":
-                        result = Math.log(parseFloat(currentDisplay.replace("ln", "")));
+                        let lnStr = currentDisplay.substring(currentDisplay.indexOf("ln") + 2);
+                        if (lnStr && lnStr !== "") {
+                            let num = parseFloat(lnStr);
+                            if (!isNaN(num)) {
+                                result = Math.log(num);
+                            } else {
+                                result = "Error: Invalid number";
+                            }
+                        } else {
+                            result = "Error: No number entered";
+                        }
                         break;
                     case "perc":
                         parts = currentDisplay.split("% of ");
@@ -267,8 +339,12 @@
                     default:
                         result = currentDisplay;
                 }
-                $("#display").text(result);
-                operator = "";
+                
+                // Only update display if result is defined
+                if (result !== undefined) {
+                    $("#display").text(result);
+                    operator = "";
+                }
             });
         });
 
